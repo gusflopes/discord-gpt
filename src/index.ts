@@ -1,5 +1,6 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { SetupCommands } from './commands.js';
+import { ChatGPT } from './openai.js';
 // require('dotenv').config();
 import * as dotenv from 'dotenv';
 dotenv.config()
@@ -25,15 +26,17 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.on('messageCreate', async interaction => {
-  console.log(interaction)
   if (interaction.author.bot) {
     return
   }
-
+  
+  // console.log(interaction)
   
   if (interaction.mentions.has(client.user!)) {
     console.log("Bot foi mencionado. Respondendo!")
-    interaction.reply("O que foi???")
+    // await ChatGPT(interaction.content)
+    const gptResponse = await ChatGPT(interaction.content)
+    interaction.reply(gptResponse ? gptResponse : "Alguma coisa deu errado!")
   }
   console.log("Nova mensagem, mas não fui mencionado, então foda-se!")
 })
