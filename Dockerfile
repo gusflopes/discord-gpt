@@ -43,7 +43,4 @@ RUN npm ci --only=production --omit-dev
 # Show current folder structure in logs
 RUN ls -al -R
 
-# Excluir a imagem temporária
-RUN apk --no-cache del .build-deps
-
 CMD [ "pm2-runtime", "start", "ecosystem.config.cjs" ]
