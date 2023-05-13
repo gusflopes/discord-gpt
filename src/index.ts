@@ -40,6 +40,7 @@ client.on('messageCreate', async interaction => {
   if (interaction.mentions.has(client.user!)) {
     console.log("Bot foi mencionado. Respondendo!")
     const startTime = performance.now()
+    interaction.channel.sendTyping()
 
     const gptResponse = await ChatGPT(interaction.content)
     // const gptResponse = readGPTResponse('gpt-response-001.txt')
