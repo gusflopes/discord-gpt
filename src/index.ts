@@ -59,10 +59,10 @@ client.on('messageCreate', async interaction => {
         responseTime: responseTime,
         interaction: interaction.toJSON(), // Sua variável interaction
       };
-      await saveDataToMongoDb(mongoUrl, data);
+      saveDataToMongoDb(mongoUrl, data);
 
-      const fileName = await generateRandomFileName('gpt-response', 'txt');
-      saveGPTResponse(gptResponse, `tmp/${fileName}`)
+      // const fileName = await generateRandomFileName('gpt-response', 'txt');
+      // saveGPTResponse(gptResponse, `tmp/${fileName}`)
       sendMessage(gptResponse, interaction.channel)
     } else {
       interaction.reply("Alguma coisa deu errado!")
