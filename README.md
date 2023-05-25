@@ -10,7 +10,8 @@ docker build -t discord-gpt .
 docker stop hublaw-gpt && docker rm hublaw-gpt
 
 # Run Container
-docker run --name hublaw-gpt --env-file ./.env discord-gpt
+docker run --name hublaw-gpt --restart=unless-stopped --env-file ./.env discord-gpt
+
 ```
 
 ## PM2 Stuff

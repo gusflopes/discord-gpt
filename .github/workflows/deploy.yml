@@ -1,0 +1,39 @@
+name: Deploy Digital Ocean Droplet
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    environment:
+      name: production
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up environment variables
+      run: |
+        echo "DISCORD_APP_ID=${{ secrets.DISCORD_APP_ID }}" >> docker.env
+        echo "DISCORD_PUB_KEY=${{ secrets.DISCORD_PUB_KEY }}" >> docker.env
+        echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}" >> docker.env
+        echo "PERMISSION=${{ secrets.PERMISSION }}" >> docker.env
+        echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> docker.env
+        echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> docker.env
+        echo "::set-env name=IMAGE_TAG::$(date +%s)"
+  
+    - name: Build Docker image
+      #run: docker build -t discord-gpt .
+      run: docker build . --file Dockerfile --tag discord-gpt:${{ env.IMAGE_TAG }}
+
+    - name: Stop and remove previous container
+      run: |
+        docker stop hublaw-gpt || true
+        docker rm hublaw-gpt || true
+
+    - name: Run Docker container
+      run: |
+        docker run --name hublaw-gpt --restart=unless-stopped --env-file docker.env discord-gpt:${{ env.IMAGE_TAG }}
