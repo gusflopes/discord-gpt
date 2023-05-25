@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up environment variables
       run: |
@@ -23,11 +23,10 @@ jobs:
         echo "PERMISSION=${{ secrets.PERMISSION }}" >> docker.env
         echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> docker.env
         echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> docker.env
-        echo "::set-env name=IMAGE_TAG::$(date +%s)"
   
     - name: Build Docker image
       #run: docker build -t discord-gpt .
-      run: docker build . --file Dockerfile --tag discord-gpt:${{ env.IMAGE_TAG }}
+      run: docker build . --file Dockerfile --tag discord-gpt:latest
 
     - name: Stop and remove previous container
       run: |
@@ -36,4 +35,4 @@ jobs:
 
     - name: Run Docker container
       run: |
-        docker run --name hublaw-gpt --restart=unless-stopped --env-file docker.env discord-gpt:${{ env.IMAGE_TAG }}
+        docker run -d --name hublaw-gpt --restart=unless-stopped --env-file docker.env discord-gpt:latest
