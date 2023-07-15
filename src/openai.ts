@@ -12,7 +12,7 @@ export const ChatGPT = async (message: string = "Você pode me ajudar?") => {
   console.log(message)
 
   const response = await openai.createChatCompletion({
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4-32k',
     messages: [
       { "role": "system", "content": "Você é o Hublaw GPT, um assistente virtual baseado em inteligência artificial desenvolvido pela Hublaw para auxiliar desenvolvedores de software na elaboração de códigos limpos e eficientes." },
       { "role": "user", "content": message }
