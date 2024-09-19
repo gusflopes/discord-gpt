@@ -1,3 +1,4 @@
+require('newrelic');
 import crypto from 'crypto';
 import { Client, GatewayIntentBits } from 'discord.js';
 import fs from 'fs';
