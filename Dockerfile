@@ -33,6 +33,10 @@ ENV NODE_ENV=production \
   PERMISSION=${PERMISSION} \
   OPENAI_API_KEY=${OPENAI_API_KEY}
 
+# Setar variáveis de ambiente do New Relic
+ENV NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
+ENV NEW_RELIC_LOG=stdout
+
 # Install app dependencies
 ENV NPM_CONFIG_LOGLEVEL warn
 RUN npm ci --only=production --omit-dev

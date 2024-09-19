@@ -12,27 +12,33 @@ jobs:
       name: production
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up environment variables
-      run: |
-        echo "DISCORD_APP_ID=${{ secrets.DISCORD_APP_ID }}" >> docker.env
-        echo "DISCORD_PUB_KEY=${{ secrets.DISCORD_PUB_KEY }}" >> docker.env
-        echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}" >> docker.env
-        echo "PERMISSION=${{ secrets.PERMISSION }}" >> docker.env
-        echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> docker.env
-        echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> docker.env
-  
-    - name: Build Docker image
-      #run: docker build -t discord-gpt .
-      run: docker build . --file Dockerfile --tag discord-gpt:latest
+      - name: Set up environment variables
+        run: |
+          echo "DISCORD_APP_ID=${{ secrets.DISCORD_APP_ID }}" >> docker.env
+          echo "DISCORD_PUB_KEY=${{ secrets.DISCORD_PUB_KEY }}" >> docker.env
+          echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}" >> docker.env
+          echo "PERMISSION=${{ secrets.PERMISSION }}" >> docker.env
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> docker.env
+          echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> docker.env
+          echo "NEW_RELIC_LICENSE_KEY=${{ secrets.NEW_RELIC_LICENSE_KEY }}" >> docker.env
 
-    - name: Stop and remove previous container
-      run: |
-        docker stop hublaw-gpt || true
-        docker rm hublaw-gpt || true
+      - name: Build Docker image
+        #run: docker build -t discord-gpt .
+        run: docker build . --file Dockerfile --tag discord-gpt:latest
 
-    - name: Run Docker container
-      run: |
-        docker run -d --name hublaw-gpt --restart=unless-stopped --env-file docker.env discord-gpt:latest
+      - name: Stop and remove previous container
+        run: |
+          docker stop hublaw-gpt || true
+          docker rm hublaw-gpt || true
+
+      - name: Run Docker container
+        run: |
+          docker run -d \
+          -e NEW_RELIC_APP_NAME="hublaw-gpt" \
+          --name hublaw-gpt \
+          --restart=unless-stopped \
+          --env-file docker.env \
+          discord-gpt:latest
